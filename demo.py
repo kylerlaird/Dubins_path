@@ -127,10 +127,10 @@ def plot_arrow(x, y, yaw, length=3.0, width=1.0, fc="r", ec="k", color='black'):
 		plt.plot(x, y, marker='o', color=color)
 
 
-def dubins_path(start, end, curvature):
+def dubins_path(start, end, radius):
 	(sx, sy, syaw) = start
 	(ex, ey, eyaw) = end
-	c = curvature
+	c = radius
 
 	ex = ex - sx
 	ey = ey - sy
@@ -180,10 +180,10 @@ def plot_solution(start, end, solution, show_work=3):
 	plt.axis(x_axis + y_axis)
 	#plt.grid(True, xdata=[5])
 	
-	curvature = solution[0][2]
+	radius = solution[0][2]
 	plt.text(-15, -23, 'start: (%d, %d, %d)' % (start[0], start[1], (90 - math.degrees(start[2])) % 360))
 	plt.text(-15, -24, 'end: (%d, %d, %d)' % (end[0], end[1], (90 - math.degrees(end[2])) % 360))
-	plt.text(-15, -25, 'curvature: %d' % (curvature))
+	plt.text(-15, -25, 'radius: %d' % (radius))
 
 	plt.text(-5, +23, 'Dubins path', multialignment='center', size=20)
 	if False:
@@ -224,30 +224,30 @@ def plot_solution(start, end, solution, show_work=3):
 	py = [0]
 	pyaw = [0]
 
-	for (mode, length, curvature) in solution:
-		print('mode:', mode, 'length:', length, 'curvature:', curvature)
+	for (mode, length, radius) in solution:
+		print('mode:', mode, 'length:', length, 'radius:', radius)
 
 
 			
 		if mode is 'L':
 			print('left')
 			center = (
-				current_position[0] + math.cos(current_position[2] + math.pi/2.0) * curvature,	
-				current_position[1] + math.sin(current_position[2] + math.pi/2.0) * curvature,	
+				current_position[0] + math.cos(current_position[2] + math.pi/2.0) * radius,	
+				current_position[1] + math.sin(current_position[2] + math.pi/2.0) * radius,	
 			)
-			#plt.gca().add_artist(plt.Circle(center, curvature, fill=False))
-			#arcs = [matplotlib.patches.Arc(xy=center, width=curvature, height=curvature, angle=0, theta1=0, theta2=0)] 
-			#arcs = [matplotlib.patches.Arc(xy=center, width=curvature * 2, height=curvature * 2, angle=0, theta1=0, theta2=360)] 
+			#plt.gca().add_artist(plt.Circle(center, radius, fill=False))
+			#arcs = [matplotlib.patches.Arc(xy=center, width=radius, height=radius, angle=0, theta1=0, theta2=0)] 
+			#arcs = [matplotlib.patches.Arc(xy=center, width=radius * 2, height=radius * 2, angle=0, theta1=0, theta2=360)] 
 
-			circumference = math.pi * curvature
+			circumference = math.pi * radius
 			theta1 = math.degrees(current_position[2])-90
 			theta2 = theta1 + (180 * length/circumference)
 
 			if show_work == 1:
 				ax.add_artist(matplotlib.patches.Arc(
 					xy=center, 
-					width=curvature * 2,
-					height=curvature * 2,
+					width=radius * 2,
+					height=radius * 2,
 					#angle=0,
 					#theta1=theta1,
 					#theta2=theta2,
@@ -257,8 +257,8 @@ def plot_solution(start, end, solution, show_work=3):
 			elif show_work == 2:
 				ax.add_artist(matplotlib.patches.Arc(
 					xy=center, 
-					width=curvature * 2,
-					height=curvature * 2,
+					width=radius * 2,
+					height=radius * 2,
 					angle=0,
 					theta1=theta1,
 					theta2=theta2,
@@ -269,30 +269,30 @@ def plot_solution(start, end, solution, show_work=3):
 
 
 			new_position = (
-				center[0] + math.cos(math.radians(theta2)) * curvature,
-				center[1] + math.sin(math.radians(theta2)) * curvature,
+				center[0] + math.cos(math.radians(theta2)) * radius,
+				center[1] + math.sin(math.radians(theta2)) * radius,
 				math.radians(theta2 + 90)
 			)
 
 		elif mode is 'l':
 			print('left, reverse')
 			center = (
-				current_position[0] + math.cos(current_position[2] + math.pi/2.0) * curvature,	
-				current_position[1] + math.sin(current_position[2] + math.pi/2.0) * curvature,	
+				current_position[0] + math.cos(current_position[2] + math.pi/2.0) * radius,	
+				current_position[1] + math.sin(current_position[2] + math.pi/2.0) * radius,	
 			)
-			#plt.gca().add_artist(plt.Circle(center, curvature, fill=False))
-			#arcs = [matplotlib.patches.Arc(xy=center, width=curvature, height=curvature, angle=0, theta1=0, theta2=0)] 
-			#arcs = [matplotlib.patches.Arc(xy=center, width=curvature * 2, height=curvature * 2, angle=0, theta1=0, theta2=360)] 
+			#plt.gca().add_artist(plt.Circle(center, radius, fill=False))
+			#arcs = [matplotlib.patches.Arc(xy=center, width=radius, height=radius, angle=0, theta1=0, theta2=0)] 
+			#arcs = [matplotlib.patches.Arc(xy=center, width=radius * 2, height=radius * 2, angle=0, theta1=0, theta2=360)] 
 
-			circumference = math.pi * curvature
+			circumference = math.pi * radius
 			theta1 = math.degrees(current_position[2])-90
 			theta2 = theta1 + (180 * length/circumference)
 
 			if show_work == 1:
 				ax.add_artist(matplotlib.patches.Arc(
 					xy=center, 
-					width=curvature * 2,
-					height=curvature * 2,
+					width=radius * 2,
+					height=radius * 2,
 					#angle=0,
 					#theta1=theta1,
 					#theta2=theta2,
@@ -302,8 +302,8 @@ def plot_solution(start, end, solution, show_work=3):
 			elif show_work == 2:
 				ax.add_artist(matplotlib.patches.Arc(
 					xy=center, 
-					width=curvature * 2,
-					height=curvature * 2,
+					width=radius * 2,
+					height=radius * 2,
 					angle=0,
 					theta1=theta1,
 					theta2=theta2,
@@ -314,18 +314,18 @@ def plot_solution(start, end, solution, show_work=3):
 
 
 			new_position = (
-				center[0] + math.cos(math.radians(theta2)) * curvature,
-				center[1] + math.sin(math.radians(theta2)) * curvature,
+				center[0] + math.cos(math.radians(theta2)) * radius,
+				center[1] + math.sin(math.radians(theta2)) * radius,
 				math.radians(theta2 + 90)
 			)
 
 		elif mode is 'R':
 			print('right')
 			center = (
-				current_position[0] + math.cos(current_position[2] - math.pi/2.0) * curvature,	
-				current_position[1] + math.sin(current_position[2] - math.pi/2.0) * curvature,	
+				current_position[0] + math.cos(current_position[2] - math.pi/2.0) * radius,	
+				current_position[1] + math.sin(current_position[2] - math.pi/2.0) * radius,	
 			)
-			circumference = math.pi * curvature
+			circumference = math.pi * radius
 			theta2 = math.degrees(current_position[2])+90
 			theta1 = theta2 - (180 *length/circumference)
 
@@ -333,8 +333,8 @@ def plot_solution(start, end, solution, show_work=3):
 			if show_work == 1:
 				ax.add_artist(matplotlib.patches.Arc(
 					xy=center, 
-					width=curvature * 2,
-					height=curvature * 2,
+					width=radius * 2,
+					height=radius * 2,
 					#angle=0,
 					#theta1=theta1,
 					#theta2=theta2,
@@ -344,8 +344,8 @@ def plot_solution(start, end, solution, show_work=3):
 			elif show_work == 2:
 				ax.add_artist(matplotlib.patches.Arc(
 					xy=center, 
-					width=curvature * 2,
-					height=curvature * 2,
+					width=radius * 2,
+					height=radius * 2,
 					angle=0,
 					theta1=theta1,
 					theta2=theta2,
@@ -354,18 +354,18 @@ def plot_solution(start, end, solution, show_work=3):
 				))
 
 			new_position = (
-				center[0] + math.cos(math.radians(theta1)) * curvature,
-				center[1] + math.sin(math.radians(theta1)) * curvature,
+				center[0] + math.cos(math.radians(theta1)) * radius,
+				center[1] + math.sin(math.radians(theta1)) * radius,
 				math.radians(theta1 - 90)
 			)
 
 		elif mode is 'r':
 			print('right, reverse')
 			center = (
-				current_position[0] + math.cos(current_position[2] - math.pi/2.0) * curvature,	
-				current_position[1] + math.sin(current_position[2] - math.pi/2.0) * curvature,	
+				current_position[0] + math.cos(current_position[2] - math.pi/2.0) * radius,	
+				current_position[1] + math.sin(current_position[2] - math.pi/2.0) * radius,	
 			)
-			circumference = math.pi * curvature
+			circumference = math.pi * radius
 			#theta2 = math.degrees(current_position[2])+90
 			#theta1 = theta2 - (180 *length/circumference)
 			theta1 = math.degrees(current_position[2])+90
@@ -377,8 +377,8 @@ def plot_solution(start, end, solution, show_work=3):
 			if show_work == 1:
 				ax.add_artist(matplotlib.patches.Arc(
 					xy=center, 
-					width=curvature * 2,
-					height=curvature * 2,
+					width=radius * 2,
+					height=radius * 2,
 					#angle=0,
 					#theta1=theta1,
 					#theta2=theta2,
@@ -388,8 +388,8 @@ def plot_solution(start, end, solution, show_work=3):
 			elif show_work == 2:
 				ax.add_artist(matplotlib.patches.Arc(
 					xy=center, 
-					width=curvature * 2,
-					height=curvature * 2,
+					width=radius * 2,
+					height=radius * 2,
 					angle=0,
 					theta1=theta1,
 					theta2=theta2,
@@ -398,8 +398,8 @@ def plot_solution(start, end, solution, show_work=3):
 				))
 
 			new_position = (
-				center[0] + math.cos(math.radians(theta1)) * curvature,
-				center[1] + math.sin(math.radians(theta1)) * curvature,
+				center[0] + math.cos(math.radians(theta1)) * radius,
+				center[1] + math.sin(math.radians(theta1)) * radius,
 				math.radians(theta1 - 90)
 			)
 
@@ -451,16 +451,16 @@ if __name__ == '__main__':
 				float(random.randrange(y_axis[0]+5, y_axis[1]-5)), 
 				math.radians(random.randrange(360))
 			)
-			curvature = float(random.randrange(1,8))
+			radius = float(random.randrange(1,8))
 
-			print('curvature = ', curvature)
+			print('radius = ', radius)
 			print('end = ', end)
 		else:
 			#end = (5.0, 5.0, math.radians(120))
 			#end = (10.0, 2.0, math.radians(120))
-			#curvature = 4.0
+			#radius = 4.0
 			#end = (3.0, -3.0, 5.532693728822025)
-			curvature = 4.0
+			radius = 4.0
 			end = (4.0, 3.0, 2.6878070480712677)
 
 
@@ -468,7 +468,7 @@ if __name__ == '__main__':
 		start = (0.0, 0.0, math.radians(+90))
 
 
-		solution = dubins_path(start=start, end=end, curvature=curvature)
+		solution = dubins_path(start=start, end=end, radius=radius)
 
 		for show_work in range(3):
 			plot_solution(start=start, end=end, solution=solution, show_work=show_work)
